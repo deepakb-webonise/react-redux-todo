@@ -1,26 +1,30 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import ListTodoComponent from "./ListTodoComponent";
+import AddTodoComponent from "./AddTodoComponent";
+import { connect } from "react-redux";
+import { addTodo } from "./store/actions/todoAction";
 
-function App() {
+function App(props) {
+  const addTodo = todo => {
+    console.log(todo);
+    let todoObject = {
+      id: 1,
+      description: todo
+    }
+
+    props.addTodo(todoObject);
+  };
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <AddTodoComponent addTodo={addTodo} />
+      <ListTodoComponent todos={props.myTodos} />
     </div>
   );
 }
-
-export default App;
+const mapStateToProps = store => {
+  return { myTodos: store.todos };
+};
+const mapDispacthToProps = (dispatch) => {
+  return { addTodo: (todo) => dispatch(addTodo(todo)) };
+};
+export default connect(mapStateToProps, mapDispacthToProps)(App);
